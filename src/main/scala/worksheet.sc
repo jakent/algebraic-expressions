@@ -1,19 +1,9 @@
+import algebra.{Polynomial, Variable}
 
 
-def blah(i: Int, j: List[String]): Int = {
-  def loop(acc: Int, b: List[String]): Int = b match {
-    case h :: tail => loop(h.charAt(0) match {
-      case '+' => acc + h.drop(1).toInt
-      case '-' => acc - h.drop(1).toInt
-    }, tail)
-    case Nil => acc
-  }
+Polynomial(3, Set(Variable(3)))
+Polynomial(4, Set(Variable(2)))
 
-  loop(i, j)
+def times(p1: Polynomial, p2: Polynomial): Polynomial = {
+
 }
-
-blah(2, List("-1", "+4", "-5"))
-
-
-
-"Hello".drop(1)
