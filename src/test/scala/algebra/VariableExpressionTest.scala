@@ -33,7 +33,7 @@ class VariableExpressionTest extends FlatSpec with Matchers {
 
   it should "add" in {
     Expression("4x") + Expression("4x") shouldEqual Expression("8x")
-    Expression("4x^2") + Expression("4x") shouldEqual Polynomial(0, Set(Variable(4,2), Variable(4)))
+    Expression("4x^2") + Expression("4x") shouldEqual Polynomial(0, Seq(Variable(4,2), Variable(4)))
     Expression("4x^2") + Expression("4x") shouldEqual Expression("4x^2 + 4x")
   }
 }

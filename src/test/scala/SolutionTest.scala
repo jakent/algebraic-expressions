@@ -9,7 +9,7 @@ class SolutionTest extends FlatSpec with Matchers {
   def readFileToString(fileName: String): String =
     Source.fromURL(getClass.getResource(fileName)).getLines().mkString("\n")
 
-  "Concave Polygon" should "work" in {
+  "Algebraic Expressions" should "work" in {
     val myOut = new ByteArrayOutputStream
     Console.withOut(new PrintStream(myOut)) {
       System.setIn(new ByteArrayInputStream(readFileToString(s"$prefix/test").getBytes()))
