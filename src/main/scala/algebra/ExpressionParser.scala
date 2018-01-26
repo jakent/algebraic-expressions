@@ -9,7 +9,7 @@ trait ExpressionParser extends JavaTokenParsers {
       case h :: tail => loop(h._1 match {
         case "+" => acc + h._2
         case "-" => acc - h._2
-        case "*" => acc * h._2
+        case "*" | "(" => acc * h._2
         case "/" => acc / h._2
       }, tail)
       case Nil => acc
@@ -19,7 +19,7 @@ trait ExpressionParser extends JavaTokenParsers {
   def expr: Parser[Expression] = term ~ rep("+" ~ term | "-" ~ term) ^^
     (b => loop(b._1, b._2))
 
-  def term: Parser[Expression] = factor ~ rep("*" ~ factor | "/" ~ factor) ^^
+  def term: Parser[Expression] = factor ~ rep("*" ~ factor | "/" ~ factor | "(" ~ expr <~ ")") ^^
     (b => loop(b._1, b._2))
 
   def coefficient: Parser[Variable] =
@@ -32,5 +32,11 @@ trait ExpressionParser extends JavaTokenParsers {
   }
   def constant: Parser[Constant] = """-?\d+""".r ^^ (n => Constant(n.toInt))
 
-  def factor: Parser[Expression] = exponent | coefficient | constant | "(" ~> expr <~ ")"
+  // TODO: use in term
+  def polynomial: Parser[Expression] = ("(" ~ expr <~ ")" | "-(" ~ expr <~ ")") ^^ {
+    case "-("~e => e * -1
+    case "("~e => e
+  }
+
+  def factor: Parser[Expression] = exponent | coefficient | constant | polynomial
 }

@@ -4,7 +4,7 @@ import scala.io.Source
 
 class SolutionTest extends FlatSpec with Matchers {
 
-  val prefix = "basic"
+  val prefix = "tricky"
 
   def readFileToString(fileName: String): String =
     Source.fromURL(getClass.getResource(fileName)).getLines().mkString("\n")

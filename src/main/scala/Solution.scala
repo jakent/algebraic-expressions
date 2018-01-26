@@ -8,6 +8,6 @@ object Solution {
     val lines = Source.stdin.getLines
     val nTests = lines.next.toInt
 
-    lines.take(nTests).toSeq.map(Expression(_)).foreach(println)
+    lines.take(nTests).toSeq.map(s => Expression(s.replaceAll(" ", ""))).foreach(println)
   }
 }

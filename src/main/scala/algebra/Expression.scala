@@ -63,7 +63,7 @@ case class Variable(coefficient: Int, exponent: Int = 1) extends Expression {
     case p: Polynomial => (p * Constant(-1)) + this
   }
 
-  override def toString: String = s"${if (coefficient < -1 || coefficient > 1) coefficient else if (coefficient == -1) "-"}x${if (exponent > 1) "^"+exponent else ""}"
+  override def toString: String = s"${if (coefficient < -1 || coefficient > 1) coefficient else if (coefficient == -1) "-" else ""}x${if (exponent > 1) "^"+exponent else ""}"
 }
 
 // TODO: should be a Seq of Variables
@@ -86,13 +86,19 @@ case class Polynomial(constant: Constant, exponents: Seq[Expression]) extends Ex
     case p: Polynomial => p.terms.foldLeft(this)((poly, term) => poly + term)
   }
 
-  def -(e: Expression): Expression = e match {
+  def -(e: Expression): Polynomial = e match {
     case c: Constant => Polynomial(constant - c, exponents)
     case v: Variable => Polynomial(constant, Polynomial.combine(exponents :+ Variable(Math.negateExact(v.coefficient), v.exponent)))
+    case p: Polynomial => p.terms.foldLeft(this)((poly, term) => poly - term)
   }
 
-  override def toString: String = Polynomial.combine(exponents).mkString(" + ") +
-    (if (constant == Constant(0)) "" else if (constant > 0) " + " + constant else " - " + Math.negateExact(constant))
+  override def toString: String = {
+    val e: Seq[Expression] = Polynomial.combine(exponents)
+    e.tail.foldLeft(e.head.toString)((string, term) => term match {
+      case v: Variable if v.coefficient < 0 => s"$string - ${Variable(Math.negateExact(v.coefficient), v.exponent)}"
+      case v => s"$string + $v"
+    }) + (if (constant == Constant(0)) "" else if (constant > 0) " + " + constant else " - " + Math.negateExact(constant))
+  }
 }
 
 object Polynomial {
